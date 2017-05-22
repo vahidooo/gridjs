@@ -2,33 +2,49 @@ function Grid(x, y) {
     this.x = x;
     this.y = y;
 
-    this.cells = d3.cross(d3.range(0, this.y, 1), d3.range(0, this.x, 1), function (a, b) {
-        return {position: {x: a, y: b}, member: false, boundary: false, hub: false};
-    });
+    this.cells = [];
+    for (var i = 0; i < x; i++) {
+        //var col = [];
+        for (var j = 0; j < y; j++) {
+            this.cells.push(new Cell(this, {x: i, y: j}));
+        }
+        //this.cells.push(col);
+    }
 
+
+    //this.cells = d3.cross(d3.range(0, this.y, 1), d3.range(0, this.x, 1), function (a, b) {
+    //    return new Cell(grid,{x: a, y: b});
+    //});
+
+
+    var addCell = function (cell) {
+        cells.push(new Cell(this, {x: a, y: b}));
+    };
 
     this.addColumn = function () {
         for (var i = 0; i < this.y; i++) {
-            this.cells.push({position: {x: this.x, y: i}, member: false, boundary: false});
+            addCell({x: this.x, y: i});
         }
         this.x++;
-    }
+    };
 
     this.addRow = function () {
         for (var i = 0; i < this.x; i++) {
-            this.cells.push({position: {x: i, y: this.y}, member: false, boundary: false});
+            addCell({x: i, y: this.y});
         }
         this.y++;
-    }
+    };
 
     this.find = function (i, j) {
-        var cell = this.cells.find(function (item) {
+        return this.cells.find(function (item) {
             return (item.position.x == i) && (item.position.y == j);
         });
-        if (cell != undefined) {
-            return cell;
-        }
-        return undefined;
+
+
+        //if( i < 0 || i >= this.x || j < 0 || j >= this.y )
+        //    return undefined;
+        //
+        //return this.cells[i][j];
     };
 
     this.solve = function () {
@@ -36,6 +52,7 @@ function Grid(x, y) {
         for (var c in this.cells) {
             var cell = this.cells[c];
             cell.boundary = false;
+            cell.hub = false;
             if (!cell.member)
                 continue;
 
@@ -89,105 +106,26 @@ function Grid(x, y) {
                 if (dirCell.member && !adjCell0.member && !adjCell1.member) {
                     cell.hub = true;
                 }
-            }
-        }
 
 
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
-                if (j == 0 && i == 0)
-                    continue;
-
-                var adj = this.cells.find(function (item) {
-                    return (item.position.x == cell.position.x + i) && (item.position.y == cell.position.y + j);
-                });
-
-                if ((adj == undefined || !adj.member) && (!cell.boundary)) {
-                    cell.boundary = true;
+                if (cell.degree( ) == 1) {
+                    cell.hub = true;
                 }
-            }
-        }
 
-
-    };
-}
-
-function Plane(grid, svg, cellSize) {
-    this.svg = svg;
-    this.cellSize = cellSize;
-
-    this.width = function () {
-        return cellSize * grid.x * 2;
-    };
-
-    this.height = function () {
-        return cellSize * grid.y * 2;
-    };
-
-
-    this.draw = function () {
-
-        d3.selectAll("svg > *").remove();
-
-        svg.attr("width", this.width())
-            .attr("height", this.height());
-
-        var view = this.svg.selectAll(".cell")
-            .data(grid.cells);
-
-        view.enter().append("rect")
-            .attr("x", function (d) {
-                return d.position.x * cellSize;
-            })
-            .attr("y", function (d) {
-                return d.position.y * cellSize;
-            })
-            .attr('id', function (d) {
-                return d.position.x + '-' + d.position.y;
-            })
-            .attr("height", cellSize)
-            .attr("width", cellSize)
-            .classed("cell", true)
-            .classed('boundary-cell', function (d, i) {
-                return d.boundary;
-            })
-            .classed('member-cell', function (d, i) {
-                return d.member;
-            })
-            .classed('hub-cell', function (d, i) {
-                return d.hub;
-            })
-            .on("mouseover", function (d) {
-                if (d3.event.shiftKey) {
-                    d.member = true;
-                    d3.select(this).classed("member-cell", true);
-
-                }
-            }).on("click", function (d) {
-                if (d3.event.shiftKey) {
-                    d.member = !d.member;
-                    if (!d.member) {
-                        d.boundary = false;
-                    }
-                    if (d.member) {
-                        d3.select(this).classed("member-cell", true);
-                    } else {
-                        d3.select(this).classed("member-cell", false);
-                        d3.select(this).classed("boundary-cell", false);
+                if (cell.degree(function(cell) { return cell.boundary;}) == 2) {
+                    if ((this.isMember(cell.right())) && this.isMember(cell.left())
+                        || (this.isMember(cell.down()) && this.isMember(cell.up()))) {
+                        cell.hub = true;
                     }
                 }
-            });
 
-        view.exit().remove();
+            }
+        }
     };
 
-    this.addColumn = function () {
-        grid.addColumn();
-        this.draw();
+
+    this.isMember = function (cell) {
+        return (cell != undefined && cell.member);
     }
 
-    this.addRow = function () {
-        grid.addRow();
-        this.draw();
-    }
 }
