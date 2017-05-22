@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<meta charset="utf-8" xmlns="http://www.w3.org/1999/html">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+
+
+<script src="js/cell.js"></script>
+<script src="js/grid.js"></script>
+
+<div class="container-fluid">
+
+    <div class="row col-md-12">
+        <input type="submit" class="btn btn-success disabled" value="save"/>
+        <input type="submit" class="btn btn-success disabled" value="load"/>
+        <input type="submit" class="btn btn-danger disabled" value="validate"/>
+        <input type="submit" class="btn btn-danger" onclick="grid.solve(); plane.draw();" value="solve"/>
+
+
+        <input type="submit" class="btn btn-danger" onclick="grid.hub(); plane.draw();" value="hubs"/>
+
+        <button type="button" class="btn" onclick="plane.addColumn()">
+            <span class="glyphicon glyphicon-expand"></span> expand
+        </button>
+
+        <button type="button" class="btn" onclick="plane.addRow()">
+            <span class="glyphicon glyphicon-collapse-down"></span> expand
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-success">
+            <div class="panel-body">
+                <div>
+                    <div id="container"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var grid = new Grid(10, 10);
+
+    var svg = d3.select("#container").append("svg");
+
+
+    var plane = new Plane(grid, svg, 40);
+
+    plane.draw();
+
+</script>
+
+
+</body>

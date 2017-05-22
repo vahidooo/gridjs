@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<meta charset="utf-8" xmlns="http://www.w3.org/1999/html">
+<style> /* set the CSS */
+
+.cell {
+    fill: green;
+    fill-opacity: 0.2;
+    stroke: #cdcdcd;
+    stroke-width: 1px;
+}
+
+.member-cell {
+    fill: red;
+    fill-opacity: 1;
+    stroke: #cdcdcd;
+    stroke-width: 1px;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.grid {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+
+.grid path {
+    stroke-width: 0;
+}
+
+</style>
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="js/plane.js"></script>
+
+<script>
+
+
+    var app = {
+
+        plane: {
+            height: function () {
+                return y * cellSize;
+            },
+            width: function () {
+                return this.x * this.cellSize;
+            }
+        },
+
+        cellSize: 25, x: 10, y: 15
+    };
+
+//    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+//            width = app.cellSize * app.x/*- margin.left - margin.right*/,
+//            height = app.cellSize * app.y /*- margin.top - margin.bottom*/,
+//            cellSize = app.cellSize;
+
+
+    var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+
+
+    draw_cells(svg, width, height, cellSize, app);
+
+
+</script>
+
+<input type="button" onclick="addData(svg, cellSize , app)"/>
+</body>

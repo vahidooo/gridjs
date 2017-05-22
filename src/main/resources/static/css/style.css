@@ -1,0 +1,37 @@
+.cell {
+    fill: oldlace;
+    /*fill-opacity: 0.2;*/
+    stroke: #cdcdcd;
+    stroke-width: 1px;
+}
+
+.member-cell {
+    fill: yellow;
+    /*fill-opacity: 1;*/
+    stroke: #cdcdcd;
+    stroke-width: 1px;
+}
+
+/*.line {*/
+    /*fill: none;*/
+    /*stroke: steelblue;*/
+    /*stroke-width: 2px;*/
+/*}*/
+
+/*.grid {*/
+    /*stroke: lightgrey;*/
+    /*stroke-opacity: 0.7;*/
+    /*shape-rendering: crispEdges;*/
+/*}*/
+
+/*.grid path {*/
+    /*stroke-width: 0;*/
+/*}*/
+
+.boundary-cell{
+    fill: orange;
+}
+
+.hub-cell{
+    fill: red;
+}
